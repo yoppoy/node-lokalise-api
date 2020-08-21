@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/lokalise/node-lokalise-api.svg?branch=master)](https://travis-ci.org/lokalise/node-lokalise-api)
 [![Test Coverage](https://codecov.io/gh/lokalise/node-lokalise-api/graph/badge.svg)](https://codecov.io/gh/lokalise/node-lokalise-api)
 
-Official Node interface for the [Lokalise API](https://app.lokalise.com/api2docs/curl/#resource-getting-started).
+Modified Node interface for the [Lokalise API](https://app.lokalise.com/api2docs/curl/#resource-getting-started) **using `Axios` instead of `got`**.
 
 ## Index
 
