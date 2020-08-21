@@ -42,7 +42,7 @@
     "ts-node": "^8.10.2"
   },
   "dependencies": {
-    "got": "^11.5.0",
+    "axios": "^0.19.2",
     "typescript": "^3.9.6"
   },
   "bugs": {
