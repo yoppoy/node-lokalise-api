@@ -1,5 +1,8 @@
-import { RequestError, Response, Options } from "got";
-const got = require("got");
+//import { RequestError, Response, Options } from "got";
+//const got = require("got");
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+
+const axios = require("axios");
 const pkg = require("../../package.json");
 import { LokaliseApi } from "../lokalise/lokalise";
 
@@ -16,32 +19,31 @@ export class ApiRequest {
   }
 
   createPromise(uri: any, method: any, body: any): Promise<any> {
-    const options: Options = {
+    const options: AxiosRequestConfig = {
+      url: this.composeURI(uri),
       method: method,
-      prefixUrl: this.urlRoot,
+      baseURL: this.urlRoot,
       headers: {
-        "x-api-token": <string>LokaliseApi.apiKey,
+        "x-api-token": LokaliseApi.apiKey,
         "user-agent": `node-lokalise-api/${pkg.version}`,
       },
-      agent: false,
+      /*agent: false,
       throwHttpErrors: false,
-      decompress: false,
+      decompress: false,*/
     };
 
-    const url: string = this.composeURI(uri);
-
     if (Object.keys(this.params).length > 0) {
-      options["searchParams"] = new URLSearchParams(this.params).toString();
+      options.params = new URLSearchParams(this.params).toString();
     }
 
     if (method != "GET" && body) {
-      options["body"] = JSON.stringify(body);
+      options.data = JSON.stringify(body);
     }
 
     return new Promise((resolve, reject) => {
-      got(url, options)
-        .then((response: Response) => {
-          const responseJSON = JSON.parse(<string>response.body);
+      axios(options)
+        .then((response: AxiosResponse) => {
+          const responseJSON = response.data;
           if (
             responseJSON["error"] ||
             (responseJSON["errors"] && responseJSON["errors"].length != 0)
@@ -55,11 +57,11 @@ export class ApiRequest {
           // Workaround to pass header parameters
           const result: any = {};
           result["headers"] = response.headers;
-          result["body"] = responseJSON;
+          result["body"] = response.data;
           resolve(result);
           return;
         })
-        .then((error: RequestError) => {
+        .then((error: AxiosError) => {
           reject(error.code);
           /* istanbul ignore next */
           return error;
